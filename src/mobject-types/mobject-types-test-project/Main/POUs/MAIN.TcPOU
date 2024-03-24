@@ -5,6 +5,7 @@
 VAR
 	//alias
 	_HRESULT_TestSuite : _HRESULT_TestSuite;
+    _FLOAT_TestSuite : _FLOAT_TestSuite;
 	
 	// primitive
 	_BOOL_TestSuite : _BOOL_TestSuite;

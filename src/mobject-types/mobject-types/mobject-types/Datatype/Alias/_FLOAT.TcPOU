@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="_FLOAT" Id="{da9a7b3e-be1d-0005-1c6e-3d7dd9abaaef}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+{attribute 'enable_dynamic_creation'}
+FUNCTION_BLOCK _FLOAT EXTENDS AliasDatatypeBase
+VAR
+	localData : FLOAT;
+	activeData : REFERENCE TO FLOAT REF= localData;
+	aliasBaseType : _LREAL(localData);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{8bf4da58-3a50-05f4-077b-bcbbd5909891}" />
+    <Folder Name="Protected" Id="{7da1f016-768a-038f-3a64-a55bf4def463}" />
+    <Property Name="Address" Id="{a3b81c0c-0d3a-030b-1439-cc8595fcd9ef}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Address : PVOID]]></Declaration>
+      <Get Name="Get" Id="{67ff26d1-35c6-054f-3097-c6f72d0575ef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Address := ADR(activeData);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearReference" Id="{b26102f9-0a76-0533-3133-8ce6ba42c5e6}">
+      <Declaration><![CDATA[METHOD PUBLIC ClearReference
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[activeData REF= localData;
+SetBaseTypeReference();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Clone" Id="{54b09d07-e5c0-01da-0e34-77f9125f0f57}">
+      <Declaration><![CDATA[METHOD PUBLIC Clone : I_Datatype
+VAR
+    pClone : POINTER TO _FLOAT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pClone := __NEW(_FLOAT(InitialValue := Value));
+Clone := pClone^;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{56542e2c-65bc-0c65-33a4-1261a3da31e5}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	InitialValue : FLOAT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[localData := InitialValue;
+SetBaseTypeReference();
+AddBaseType(aliasBaseType);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Identifier" Id="{0b7f334b-f421-0db8-29b5-1f8a29cd6758}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Identifier : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{d3c99723-d02a-0663-2282-984de7592596}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Identifier := 'FLOAT';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="MakeReferenceTo" Id="{85610176-60d5-080e-3362-e3ec975ef709}">
+      <Declaration><![CDATA[METHOD PUBLIC MakeReferenceTo
+VAR_INPUT
+	ReferenceTarget : REFERENCE TO FLOAT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[activeData REF= ReferenceTarget;
+SetBaseTypeReference();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetBaseTypeReference" Id="{15817983-2c96-0231-12ce-abcd10dfc190}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED SetBaseTypeReference
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[aliasBaseType.MakeReferenceTo(activeData);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Size" Id="{b5951038-3881-0f82-323d-25b63b9d3b12}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Size : UDINT]]></Declaration>
+      <Get Name="Get" Id="{44648b98-e68a-05d2-1160-d2417d846f6c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Size := SIZEOF(activeData);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TryMakeReferenceTo" Id="{ebaaabf5-7f37-06f0-31b5-8d14886a9a0a}">
+      <Declaration><![CDATA[METHOD TryMakeReferenceTo : BOOL
+VAR_INPUT
+	Target : I_Datatype;
+END_VAR
+VAR
+	pTargetData : POINTER TO FLOAT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT (Target.IecType = IecType) THEN
+	RETURN;
+END_IF
+
+pTargetData := Target.Address;
+activeData REF= pTargetData^;
+SetBaseTypeReference();
+TryMakeReferenceTo := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Value" Id="{4abd9960-a165-09d9-3226-93a9b6e11288}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Value : FLOAT]]></Declaration>
+      <Get Name="Get" Id="{10a0c3f0-25fa-047d-1b6b-527200a2d354}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Value := activeData;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{20524632-53e0-026d-008c-f2a1f7b0b0c3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[activeData := Value;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

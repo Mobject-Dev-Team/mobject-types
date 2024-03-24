@@ -8,6 +8,7 @@ FUNCTION_BLOCK PlcBasicDatatypePack IMPLEMENTS I_DatatypePack
 VAR
 	// alias
 	_hresult : _HRESULT(0);
+    _float : _FLOAT(0);
 	
 	// primitive
 	_bool : _BOOL(FALSE);
@@ -46,6 +47,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[// alias
 Datatypes.RegisterDatatype(_hresult);
+Datatypes.RegisterDatatype(_float);
 
 // primitive
 Datatypes.RegisterDatatype(_bool);
